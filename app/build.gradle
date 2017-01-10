@@ -36,7 +36,6 @@ dependencies {
     //Butterknife
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
-
     compile files('libs/baidumapapi_base_v4_1_1.jar')
     compile files('libs/baidumapapi_cloud_v4_1_1.jar')
     compile files('libs/baidumapapi_map_v4_1_1.jar')
@@ -44,7 +43,10 @@ dependencies {
     compile files('libs/baidumapapi_search_v4_1_1.jar')
     compile files('libs/baidumapapi_util_v4_1_1.jar')
     compile files('libs/locSDK_6.13.jar')
-
     // 圆形的图片
     compile 'com.pkmmte.view:circularimageview:1.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 }

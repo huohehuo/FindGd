@@ -21,10 +21,12 @@ import com.feicui.findgd.commons.ActivityUtils;
 import com.feicui.findgd.commons.RegexUtils;
 import com.feicui.findgd.custom.AlertDialogFragment;
 import com.feicui.findgd.treasure.HomeActivity;
+import com.feicui.findgd.user.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by LINS on 2017/1/3.
@@ -44,11 +46,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
     private ProgressDialog mDialog;
     private ActivityUtils mActivityUtils;
     private String mUsername,mPassword;
+
+    private Unbinder mUnbinder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        mUnbinder=ButterKnife.bind(this);
 
         mActivityUtils = new ActivityUtils(this);
 
@@ -106,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
             return;
         }
         //去做业务逻辑的处理
-        new LoginPresenter(this).login();
+        new LoginPresenter(this).login(new User(mUsername,mPassword));
     }
 
     //-------------视图接口方法的具体实现
@@ -134,5 +138,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         //发送广播，关闭MainActivity界面
         Intent intent = new Intent(MainActivity.MAIN_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
     }
 }
