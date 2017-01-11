@@ -32,6 +32,11 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.feicui.findgd.R;
+import com.feicui.findgd.commons.ActivityUtils;
+import com.feicui.findgd.treasure.Treasure;
+import com.feicui.findgd.treasure.TreasureRepo;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +48,7 @@ import butterknife.OnClick;
  */
 
 // 宝藏页面：地图的展示和宝藏数据的展示
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements MapMvpView{
 
     private static final int ACCESS_LOCATION = 100;
     @BindView(R.id.map_frame)
@@ -72,11 +77,20 @@ public class MapFragment extends Fragment {
     EditText mEtTreasureTitle;
     @BindView(R.id.layout_bottom)
     FrameLayout mLayoutBottom;
+
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient;
-    private LatLng mCurrentLocation;
+    private static LatLng mCurrentLocation;
     private LatLng mCurrentStatus;
     private Marker mCurrentMarker;
+
+    private MapView mMapView;
+
+    private boolean mIsFirst = true;
+
+    private ActivityUtils mActivityUtils;
+    private MapPresenter mPresenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,6 +108,11 @@ public class MapFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        mPresenter = new MapPresenter(this);
+
+        mActivityUtils = new ActivityUtils(this);
+
         //初始化百度地图
         initMapView();
         
@@ -152,7 +171,12 @@ public class MapFragment extends Fragment {
             //定位数据展示到地图上
             mBaiduMap.setMyLocationData(data);
             //移动到定位的地方，在地图上展示定位的信息：位置
-            moveToLocation();
+            // 移动到定位的地方，在地图上展示定位的信息：位置
+            // 做一个判断：第一次进入页面自动移动，其他时候点击按钮移动
+            if (mIsFirst) {
+                moveToLocation();
+                mIsFirst = false;
+            }
         }
     };
 
@@ -212,6 +236,10 @@ public class MapFragment extends Fragment {
             // 地图上显示一个InfoWindow
             mBaiduMap.showInfoWindow(infoWindow);
 
+            //宝藏信息的取出和展示
+//            int id = marker.getExtraInfo().getInt("id");
+//            Treasure treasure = TreasureRepo.getInstance();
+//            mTreasureView.bindTreasure(treasure);
             return false;
         }
     };
@@ -268,7 +296,9 @@ public class MapFragment extends Fragment {
         boolean compassEnabled = mBaiduMap.getUiSettings().isCompassEnabled();
         mBaiduMap.getUiSettings().setCompassEnabled(!compassEnabled);
     }
-
+    public static LatLng getMyLocation(){
+        return mCurrentLocation;
+    }
     // 地图的缩放
     @OnClick({R.id.iv_scaleDown,R.id.iv_scaleUp})
     public void scaleMap(View view){
@@ -309,6 +339,16 @@ public class MapFragment extends Fragment {
 
         // 添加覆盖物
         mBaiduMap.addOverlay(options);
+    }
+
+    @Override
+    public void showMessage(String msg) {
+
+    }
+
+    @Override
+    public void setData(List<Treasure> list) {
+
     }
 
 //    @Override

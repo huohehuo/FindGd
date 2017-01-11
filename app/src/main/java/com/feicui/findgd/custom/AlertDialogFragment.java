@@ -4,6 +4,7 @@ import android.app.Dialog;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
@@ -13,7 +14,7 @@ import com.feicui.findgd.R;
  * Created by LINS on 2017/1/3.
  * Please Try Hard
  */
-//自定义的对话框
+// 自定义的对话框：内部去利用AlertDialog来进行创建
 public class AlertDialogFragment extends DialogFragment {
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_MESSAGE = "key_message";
@@ -25,6 +26,8 @@ public class AlertDialogFragment extends DialogFragment {
         dialogFragment.setArguments(bundle);
         return dialogFragment;
     }
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //拿到数据

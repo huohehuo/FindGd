@@ -21,6 +21,7 @@ import com.feicui.findgd.commons.ActivityUtils;
 import com.feicui.findgd.commons.RegexUtils;
 import com.feicui.findgd.custom.AlertDialogFragment;
 import com.feicui.findgd.treasure.HomeActivity;
+import com.feicui.findgd.user.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +43,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
     @BindView(R.id.btn_Register)
     Button btnRegister;
 
-    private String username;
-    private String password;
+    private String mUsername;
+    private String mPassword;
     private ActivityUtils mActivityUtils;
     private ProgressDialog mDialog;
     @Override
@@ -86,13 +87,13 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
         @Override
         public void afterTextChanged(Editable s) {
             //处理文本输入之后的按钮事件
-            username = etUsername.getText().toString();
-            password = etPassword.getText().toString();
+            mUsername = etUsername.getText().toString();
+            mPassword = etPassword.getText().toString();
             String confirm = etConfirm.getText().toString();
-            boolean canregister = !(TextUtils.isEmpty(username)||
-                    TextUtils.isEmpty(password)||
+            boolean canregister = !(TextUtils.isEmpty(mUsername)||
+                    TextUtils.isEmpty(mPassword)||
                     TextUtils.isEmpty(confirm)
-                    &&password.equals(confirm));
+                    &&mPassword.equals(confirm));
             btnRegister.setEnabled(canregister);
         }
     };
@@ -111,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
     @OnClick(R.id.btn_Register)
     public void onClick() {
         //注册的视图和业务处理
-        if (RegexUtils.verifyUsername(username)!=RegexUtils.VERIFY_SUCCESS){
+        if (RegexUtils.verifyUsername(mUsername)!=RegexUtils.VERIFY_SUCCESS){
             // 显示一个错误的对话框
             AlertDialogFragment.getInstances(
                     getString(R.string.username_error),
@@ -119,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
             ).show(getSupportFragmentManager(),"usernameError");
             return;
         }
-        if (RegexUtils.verifyPassword(password)!=RegexUtils.VERIFY_SUCCESS){
+        if (RegexUtils.verifyPassword(mPassword)!=RegexUtils.VERIFY_SUCCESS){
             // 显示一个错误的对话框
             AlertDialogFragment.getInstances(
                     getString(R.string.password_error),
@@ -135,7 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
          * 3. 3. 后台返回的结果类型：比如String类型、Void等
          * 模拟注册，三个泛型都不需要的时候都可以设置成Void
          */
-         new RegisterPresenter(this).register();
+         new RegisterPresenter(this).register(new User(mUsername,mPassword));
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.feicui.findgd.net;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -12,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 //网络初始化的类
 public class NetClient {
     private static NetClient mNetClient;
-    private static final String BASE_URL="http://admin.syfeicuiedu.com";
+    public static final String BASE_URL="http://admin.syfeicuiedu.com";
     private TreasureApi mTreasureApi;
     private final Retrofit mRetrofit;
     public static synchronized NetClient getInstances(){
@@ -35,11 +38,15 @@ public class NetClient {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .build();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()// 设置Gson的非严格模式
+                .create();
         //初始化Retrofit
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 }

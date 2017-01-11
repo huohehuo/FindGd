@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.feicui.findgd.net.NetClient;
 import com.feicui.findgd.user.User;
+import com.feicui.findgd.user.UserPrefs;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,9 +41,13 @@ public class LoginPresenter {
                     return;
                 }
                 if (loginResult.getCode()==1){
-                    //登录成功
+                    // 真正的登录成功了
+                    // 保存头像和tokenId
+                    UserPrefs.getInstance().setPhoto(NetClient.BASE_URL+loginResult.getHeadpic());
+                    UserPrefs.getInstance().setTokenid(loginResult.getTokenid());
                     mLoginView.navigationToHome();
                 }
+                mLoginView.showMessage(loginResult.getMsg());
             }
         }
 

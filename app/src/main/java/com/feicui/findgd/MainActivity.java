@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.feicui.findgd.commons.ActivityUtils;
+import com.feicui.findgd.treasure.HomeActivity;
+import com.feicui.findgd.user.UserPrefs;
 import com.feicui.findgd.user.login.LoginActivity;
 import com.feicui.findgd.user.register.RegisterActivity;
 
@@ -43,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         mActivityUtils = new ActivityUtils(this);
         unbinder = ButterKnife.bind(this);
 
+        // 判断一下用户是不是登录过
+        SharedPreferences preferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        if (preferences!=null){
+            if (preferences.getInt("key_tokenid",0)== UserPrefs.getInstance().getTokenid()){
+                mActivityUtils.startActivity(HomeActivity.class);
+                finish();
+            }
+        }
         //注册本地广播
         IntentFilter intentFilter = new IntentFilter(MAIN_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,intentFilter);

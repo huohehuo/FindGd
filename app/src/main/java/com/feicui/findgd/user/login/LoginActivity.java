@@ -79,9 +79,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         public void afterTextChanged(Editable s) {
             mUsername = etUsername.getText().toString();
             mPassword = etPassword.getText().toString();
-            boolean conLogin=!(TextUtils.isEmpty(mUsername)||
+            boolean canLogin=!(TextUtils.isEmpty(mUsername)||
             TextUtils.isEmpty(mPassword));
-            btnLogin.setEnabled(conLogin);
+            btnLogin.setEnabled(canLogin);
         }
     };
 
