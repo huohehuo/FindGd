@@ -53,7 +53,7 @@
         <activity android:name=".user.register.RegisterActivity"/>
         <activity android:name=".user.login.LoginActivity"/>
         <activity android:name=".treasure.HomeActivity"/>
-
+        <activity android:name=".treasure.detail.TreasureDetailActivity"/>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

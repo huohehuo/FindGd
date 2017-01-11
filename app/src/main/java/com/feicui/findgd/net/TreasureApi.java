@@ -2,6 +2,8 @@ package com.feicui.findgd.net;
 
 import com.feicui.findgd.treasure.Area;
 import com.feicui.findgd.treasure.Treasure;
+import com.feicui.findgd.treasure.detail.TreasureDetail;
+import com.feicui.findgd.treasure.detail.TreasureDetailResult;
 import com.feicui.findgd.user.User;
 import com.feicui.findgd.user.login.LoginResult;
 import com.feicui.findgd.user.register.RegisterResult;
@@ -28,4 +30,9 @@ public interface TreasureApi {
     // 获取区域内的宝藏数据请求
     @POST("/Handler/TreasureHandler.ashx?action=show")
     Call<List<Treasure>> getTreasureInArea(@Body Area area);
+
+    // 宝藏详情的请求
+    @POST("/Handler/TreasureHandler.ashx?action=tdetails")
+    Call<List<TreasureDetailResult>> getTreasureDetail(@Body TreasureDetail treasureDetail);
+
 }

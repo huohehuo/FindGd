@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.Target;
 import com.feicui.findgd.MainActivity;
 import com.feicui.findgd.R;
 import com.feicui.findgd.commons.ActivityUtils;
+import com.feicui.findgd.treasure.map.MapFragment;
 import com.feicui.findgd.user.UserPrefs;
 
 import butterknife.BindView;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ImageView mIvIcon;
 
     private ActivityUtils mActivityUtils;
+    private MapFragment mMapFragment;
     private Unbinder mBind;
     private Target<GlideDrawable> mTarget;
     @Override
@@ -47,6 +49,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mBind=ButterKnife.bind(this);
+
+        // 通过id找到MapFragment
+        mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 
         // 进入页面，将宝藏数据的缓存清空
         TreasureRepo.getInstance().clear();
@@ -99,6 +104,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
             case R.id.menu_hide:
+                mMapFragment.changeUIMode(2);
                 break;
             case R.id.menu_logout:
                 // 清空登录用户数据
@@ -116,7 +122,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            // MapFragment里面视图的普通的视图，可以退出
+            if (mMapFragment.clickbackPrssed()) {
+                super.onBackPressed();
+            }
         }
     }
 }
