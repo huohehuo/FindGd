@@ -103,6 +103,7 @@ public class MapFragment extends Fragment implements MapMvpView {
     private MapPresenter mPresenter;
     private GeoCoder mGeoCoder;
     private String mCurrentAddr;
+    private static String mLocationAddr;
 
     @Nullable
     @Override
@@ -200,7 +201,7 @@ public class MapFragment extends Fragment implements MapMvpView {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
 
-            // 如果没有拿到结果，重新请求
+            // 如果没有拿到结果，重新请求：部分机型会失败
             if (bdLocation == null) {
                 mLocationClient.requestLocation();
                 return;
@@ -251,13 +252,13 @@ public class MapFragment extends Fragment implements MapMvpView {
                 ;
 
         // 创建
-        MapView mapView = new MapView(getContext(), options);
+        mMapView = new MapView(getContext(), options);
 
         // 在布局上添加地图控件：0，代表第一位
-        mMapFrame.addView(mapView, 0);
+        mMapFrame.addView(mMapView, 0);
 
         // 拿到地图的操作类(控制器：操作地图等都是使用这个)
-        mBaiduMap = mapView.getMap();
+        mBaiduMap = mMapView.getMap();
         // 设置地图状态的监听
         mBaiduMap.setOnMapStatusChangeListener(mStatusChangeListener);
 
@@ -451,6 +452,10 @@ public class MapFragment extends Fragment implements MapMvpView {
         return mCurrentLocation;
     }
 
+    // 将定位的地址供其它调用获取
+    public static String getLocationAddr(){
+        return mLocationAddr;
+    }
     private static final int UI_MODE_NORMAL = 0;// 普通的视图
     private static final int UI_MODE_SECLECT = 1;// 宝藏选中的视图
     private static final int UI_MODE_HIDE = 2;// 埋藏宝藏的视图
@@ -525,7 +530,6 @@ public class MapFragment extends Fragment implements MapMvpView {
             changeUIMode(UI_MODE_NORMAL);
             return false;
         }
-
         // 是普通的视图：告诉HomeActivity，可以退出了
         return true;
     }

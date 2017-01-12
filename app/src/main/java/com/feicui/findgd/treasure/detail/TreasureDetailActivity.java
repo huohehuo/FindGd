@@ -1,11 +1,15 @@
 package com.feicui.findgd.treasure.detail;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -17,15 +21,20 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.navi.BaiduMapNavigation;
+import com.baidu.mapapi.navi.NaviParaOption;
+import com.baidu.mapapi.utils.OpenClientUtil;
 import com.feicui.findgd.R;
 import com.feicui.findgd.commons.ActivityUtils;
 import com.feicui.findgd.custom.TreasureView;
 import com.feicui.findgd.treasure.Treasure;
+import com.feicui.findgd.treasure.map.MapFragment;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by LINS on 2017/1/11.
@@ -51,6 +60,7 @@ public class TreasureDetailActivity extends AppCompatActivity implements Treasur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //会触发onContentChanged()方法
         setContentView(R.layout.activity_treasure_detail);
     }
 
@@ -147,6 +157,122 @@ public class TreasureDetailActivity extends AppCompatActivity implements Treasur
         }
         return super.onOptionsItemSelected(item);
     }
+    // 导航的图标的点击事件
+    @OnClick(R.id.iv_navigation)
+    public void showPopupMenu(View view) {
+        // 展示一个PopupMenu
+
+        // 创建
+        PopupMenu popupMenu = new PopupMenu(this, view);
+
+        // 菜单布局填充
+        popupMenu.inflate(R.menu.menu_navigation);
+
+        // 设置菜单项的点击监听
+        popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
+
+        // 显示
+        popupMenu.show();
+
+    }
+    // 菜单项的点击监听
+    private PopupMenu.OnMenuItemClickListener mMenuItemClickListener = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+
+            //起点和终点的信息拿到
+            // 我们自己的位置和地址
+            LatLng start = MapFragment.getMyLocation();
+            String startAddr = MapFragment.getLocationAddr();
+
+            // 宝藏的位置和地址
+            LatLng end = new LatLng(mTreasure.getLatitude(),mTreasure.getLongitude());
+            String endAddr = mTreasure.getLocation();
+
+            switch (item.getItemId()) {
+                case R.id.walking_navi:
+                    // 开始步行导航
+                    startWalkingNavi(start,startAddr,end,endAddr);
+                    break;
+                case R.id.biking_navi:
+                    // 开始骑行导航
+                    startBikingNavi(start,startAddr,end,endAddr);
+                    break;
+            }
+            return false;
+        }
+    };
+
+    // 开始步行导航
+    public void startWalkingNavi(LatLng startPoint,String startAddr,LatLng endPoint,String endAddr) {
+
+        // 导航的起点和终点的设置
+        NaviParaOption option = new NaviParaOption()
+                .startName(startAddr)
+                .startPoint(startPoint)
+                .endName(endAddr)
+                .endPoint(endPoint);
+
+        // 开启导航
+        boolean walkNavi = BaiduMapNavigation.openBaiduMapWalkNavi(option, this);
+
+        // 未开启成功
+        if (!walkNavi){
+            startWebNavi(startPoint, startAddr, endPoint, endAddr);
+        }
+    }
+
+    // 开启网页导航
+    private void startWebNavi(LatLng startPoint,String startAddr,LatLng endPoint,String endAddr) {
+        // 导航的起点和终点的设置
+        NaviParaOption option = new NaviParaOption()
+                .startName(startAddr)
+                .startPoint(startPoint)
+                .endName(endAddr)
+                .endPoint(endPoint);
+
+        // 开启导航
+        BaiduMapNavigation.openWebBaiduMapNavi(option, this);
+    }
+
+    // 开始骑行导航
+    public void startBikingNavi(LatLng startPoint,String startAddr,LatLng endPoint,String endAddr) {
+        // 导航的起点和终点的设置
+        NaviParaOption option = new NaviParaOption()
+                .startName(startAddr)
+                .startPoint(startPoint)
+                .endName(endAddr)
+                .endPoint(endPoint);
+
+        // 开启导航
+        boolean walkNavi = BaiduMapNavigation.openBaiduMapBikeNavi(option, this);
+
+        // 未开启成功
+        if (!walkNavi){
+            showDialog();
+        }
+    }
+
+    // 显示一个对话框提示没有安装百度地图
+    public void showDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("您未安装百度地图的APP或版本过低，要不要安装呢？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        OpenClientUtil.getLatestBaiduMapApp(TreasureDetailActivity.this);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
 
     // ------------------视图接口里面需要实现的方法----------------------
     @Override
