@@ -4,6 +4,8 @@ import com.feicui.findgd.treasure.Area;
 import com.feicui.findgd.treasure.Treasure;
 import com.feicui.findgd.treasure.detail.TreasureDetail;
 import com.feicui.findgd.treasure.detail.TreasureDetailResult;
+import com.feicui.findgd.treasure.hide.HideTreasure;
+import com.feicui.findgd.treasure.hide.HideTreasureResult;
 import com.feicui.findgd.user.User;
 import com.feicui.findgd.user.login.LoginResult;
 import com.feicui.findgd.user.register.RegisterResult;
@@ -34,5 +36,9 @@ public interface TreasureApi {
     // 宝藏详情的请求
     @POST("/Handler/TreasureHandler.ashx?action=tdetails")
     Call<List<TreasureDetailResult>> getTreasureDetail(@Body TreasureDetail treasureDetail);
+
+    // 埋藏宝藏的请求
+    @POST("/Handler/TreasureHandler.ashx?action=hide")
+    Call<HideTreasureResult> hideTreasure(@Body HideTreasure hideTreasure);
 
 }
