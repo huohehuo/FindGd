@@ -54,7 +54,7 @@
         <activity android:name=".user.login.LoginActivity"/>
         <activity android:name=".treasure.HomeActivity"/>
         <activity android:name=".treasure.detail.TreasureDetailActivity"/>
-
+        <activity android:name=".treasure.hide.HideTreasureActivity"/>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="iZ0YknkCARSHV0EZW6Ojfep0wTAmB0VY" />

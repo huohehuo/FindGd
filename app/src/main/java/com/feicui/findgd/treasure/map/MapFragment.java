@@ -3,6 +3,7 @@ package com.feicui.findgd.treasure.map;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import com.feicui.findgd.treasure.Area;
 import com.feicui.findgd.treasure.Treasure;
 import com.feicui.findgd.treasure.TreasureRepo;
 import com.feicui.findgd.treasure.detail.TreasureDetailActivity;
+import com.feicui.findgd.treasure.hide.HideTreasureActivity;
 
 import java.util.List;
 
@@ -406,6 +408,19 @@ public class MapFragment extends Fragment implements MapMvpView {
         int id = mCurrentMarker.getExtraInfo().getInt("id");
         Treasure treasure = TreasureRepo.getInstance().getTreasure(id);
         TreasureDetailActivity.open(getContext(),treasure);
+    }
+
+    // 点击宝藏标题录入的卡片，跳转埋藏宝藏的详细页面
+    @OnClick(R.id.hide_treasure)
+    public void hideTreasure(){
+        String title = mEtTreasureTitle.getText().toString();
+        if (TextUtils.isEmpty(title)){
+            mActivityUtils.showToast("请输入宝藏标题");
+            return;
+        }
+        // 跳转到埋藏宝藏的详细页面
+        LatLng latLng = mBaiduMap.getMapStatus().target;
+        HideTreasureActivity.open(getContext(),title,mCurrentAddr,latLng,0);
     }
     // 根据位置的变化，区域也发生了变化
     private void updateMapArea() {
