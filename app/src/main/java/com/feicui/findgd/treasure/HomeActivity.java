@@ -23,6 +23,7 @@ import com.feicui.findgd.commons.ActivityUtils;
 import com.feicui.findgd.treasure.list.TreasureListFragment;
 import com.feicui.findgd.treasure.map.MapFragment;
 import com.feicui.findgd.user.UserPrefs;
+import com.feicui.findgd.user.account.AccountActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,7 +88,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         mIvIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo 更换头像
+                // 跳转到个人信息的页面
+                mActivityUtils.startActivity(AccountActivity.class);
             }
         });
     }
@@ -103,6 +105,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     .load(photo)
                     .error(R.mipmap.user_icon)
                     .placeholder(R.mipmap.user_icon)// 占位图
+                    .dontAnimate()
                     .into(mIvIcon);
         }
     }
@@ -150,6 +153,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         // 菜单的填充
         getMenuInflater().inflate(R.menu.menu_home,menu);
+        onPrepareOptionsMenu(menu);
         return true;
     }
 

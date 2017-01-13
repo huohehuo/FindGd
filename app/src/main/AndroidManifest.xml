@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.feicui.findgd">
 
     <!--百度地图所需权限-->
@@ -34,7 +35,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,6 +57,8 @@
         <activity android:name=".treasure.HomeActivity"/>
         <activity android:name=".treasure.detail.TreasureDetailActivity"/>
         <activity android:name=".treasure.hide.HideTreasureActivity"/>
+        <activity android:name=".user.account.AccountActivity"/>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="iZ0YknkCARSHV0EZW6Ojfep0wTAmB0VY" />
